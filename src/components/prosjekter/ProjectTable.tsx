@@ -394,23 +394,22 @@ export function ProjectTable({
                       />
                     </td>
 
-                    {/* Utstyr */}
+                    {/* Utstyr (read-only, synced from detail panel links) */}
                     <td className="px-3 py-3">
-                      <UtstyrChips
-                        items={project.felt}
-                        onAdd={(val) => {
-                          const updated = [...project.felt, val];
-                          updateProject(project.id, "felt", updated);
-                          const p = { ...project, felt: updated };
-                          saveProject(p);
-                        }}
-                        onRemove={(idx) => {
-                          const updated = project.felt.filter((_, i) => i !== idx);
-                          updateProject(project.id, "felt", updated);
-                          const p = { ...project, felt: updated };
-                          saveProject(p);
-                        }}
-                      />
+                      <div className="flex flex-wrap gap-1">
+                        {project.felt.length > 0 ? (
+                          project.felt.map((name, idx) => (
+                            <span
+                              key={idx}
+                              className="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-primary"
+                            >
+                              {name}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-xs text-gray-300">—</span>
+                        )}
+                      </div>
                     </td>
 
                     {/* Kabal (first link) */}
@@ -485,8 +484,15 @@ export function ProjectTable({
                           project={project}
                           onUpdate={(field, value) => {
                             updateProject(project.id, field, value);
-                            // Auto-save on blur is handled by the detail panel inputs
-                            const updated = { ...project, [field]: value };
+                            let updated = { ...project, [field]: value };
+                            // Sync felt[] from links when links change
+                            if (field === "links") {
+                              const linkNames = (value as Project["links"])
+                                .map((l) => l.utstyr)
+                                .filter(Boolean);
+                              updateProject(project.id, "felt", linkNames);
+                              updated = { ...updated, felt: linkNames };
+                            }
                             saveProject(updated);
                           }}
                         />
