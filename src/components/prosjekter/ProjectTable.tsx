@@ -113,23 +113,23 @@ export function ProjectTable({
   function toRow(p: Project) {
     return {
       id: p.id,
-      name: p.name,
-      status: p.status,
-      date: p.date,
-      field: p.field,
-      felt: p.felt,
-      links: p.links,
-      ecompletion_url: p.ecompletionUrl,
-      bsa_url: p.bsaUrl,
-      so: p.so,
-      ce: p.ce,
-      po: p.po,
-      notes: p.notes,
-      contact_name: p.contactName,
-      contact_info: p.contactInfo,
-      shipping_address: p.shippingAddress,
-      files: p.files,
-      is_standin: p.isStandin,
+      name: p.name || '',
+      status: p.status || 'planning',
+      date: p.date || '',
+      field: p.field || '',
+      felt: p.felt || [],
+      links: p.links || [],
+      ecompletion_url: p.ecompletionUrl || '',
+      bsa_url: p.bsaUrl || '',
+      so: p.so || '',
+      ce: !!p.ce,
+      po: !!p.po,
+      notes: p.notes || '',
+      contact_name: p.contactName || '',
+      contact_info: p.contactInfo || '',
+      shipping_address: p.shippingAddress || '',
+      files: p.files || [],
+      is_standin: !!p.isStandin,
     };
   }
 
@@ -142,9 +142,10 @@ export function ProjectTable({
 
       if (error) throw error;
       showToast("Prosjekt lagret");
-    } catch (err) {
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
       console.error("Save error:", err);
-      showToast("Feil ved lagring");
+      showToast("Feil ved lagring: " + msg);
     } finally {
       setSaving(false);
     }
