@@ -109,12 +109,34 @@ export function ProjectTable({
     );
   }
 
+  function toRow(p: Project) {
+    return {
+      id: p.id,
+      name: p.name,
+      status: p.status,
+      date: p.date,
+      field: p.field,
+      felt: p.felt,
+      links: p.links,
+      ecompletion_url: p.ecompletionUrl,
+      bsa_url: p.bsaUrl,
+      so: p.so,
+      ce: p.ce,
+      po: p.po,
+      notes: p.notes,
+      contact_name: p.contactName,
+      contact_info: p.contactInfo,
+      files: p.files,
+      is_standin: p.isStandin,
+    };
+  }
+
   async function saveProject(project: Project) {
     setSaving(true);
     try {
       const { error } = await supabase
         .from("projects")
-        .upsert(project, { onConflict: "id" });
+        .upsert(toRow(project), { onConflict: "id" });
 
       if (error) throw error;
       showToast("Prosjekt lagret");
@@ -273,7 +295,7 @@ export function ProjectTable({
                 Kabal
               </th>
               <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-text-light">
-                Modem
+                Custom
               </th>
               <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-text-light">
                 Status
@@ -399,7 +421,7 @@ export function ProjectTable({
                       )}
                     </td>
 
-                    {/* Modem (first link) */}
+                    {/* Custom (first link) */}
                     <td className="px-3 py-3 text-xs text-text-light">
                       {firstLink?.modemUrl ? (
                         <a
@@ -408,7 +430,7 @@ export function ProjectTable({
                           rel="noopener noreferrer"
                           className="text-primary hover:underline truncate block max-w-[120px]"
                         >
-                          Modem
+                          Custom
                         </a>
                       ) : (
                         <span className="text-gray-300">--</span>

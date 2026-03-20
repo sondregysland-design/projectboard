@@ -31,14 +31,14 @@ export function ProjectDetailPanel({
         {/* eCompletion URL */}
         <div>
           <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-text-light">
-            eCompletion URL
+            Custom 1
           </label>
           <div className="flex gap-1">
             <input
               type="url"
               value={project.ecompletionUrl}
               onChange={(e) => onUpdate("ecompletionUrl", e.target.value)}
-              placeholder="https://..."
+              placeholder="URL eller tekst..."
               className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
             <button
@@ -46,7 +46,7 @@ export function ProjectDetailPanel({
               onClick={() => openUrl(project.ecompletionUrl)}
               disabled={!isSafeUrl(project.ecompletionUrl)}
               className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-text-light hover:bg-gray-100 disabled:opacity-30 transition"
-              title="Åpne eCompletion"
+              title="Åpne Custom 1"
             >
               <svg
                 className="h-4 w-4"
@@ -68,14 +68,14 @@ export function ProjectDetailPanel({
         {/* BSA URL */}
         <div>
           <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-text-light">
-            BSA URL
+            Custom 2
           </label>
           <div className="flex gap-1">
             <input
               type="url"
               value={project.bsaUrl}
               onChange={(e) => onUpdate("bsaUrl", e.target.value)}
-              placeholder="https://..."
+              placeholder="URL eller tekst..."
               className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
             <button
@@ -83,7 +83,7 @@ export function ProjectDetailPanel({
               onClick={() => openUrl(project.bsaUrl)}
               disabled={!isSafeUrl(project.bsaUrl)}
               className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-text-light hover:bg-gray-100 disabled:opacity-30 transition"
-              title="Åpne BSA"
+              title="Åpne Custom 2"
             >
               <svg
                 className="h-4 w-4"

@@ -90,7 +90,7 @@ export function LinksTable({ links, onChange, projectDate }: LinksTableProps) {
               type="url"
               value={link.modemUrl}
               onChange={(e) => update(i, "modemUrl", e.target.value)}
-              placeholder="Modem URL"
+              placeholder="Custom URL"
               className="rounded-md border border-gray-200 px-2 py-1.5 text-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
             <button
@@ -98,7 +98,7 @@ export function LinksTable({ links, onChange, projectDate }: LinksTableProps) {
               onClick={() => openUrl(link.modemUrl)}
               disabled={!isSafeUrl(link.modemUrl)}
               className="inline-flex h-7 w-7 items-center justify-center rounded-md text-text-light hover:bg-gray-100 disabled:opacity-30 transition"
-              title="Åpne Modem"
+              title="Åpne Custom"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
