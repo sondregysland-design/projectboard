@@ -38,6 +38,7 @@ function emptyProject(isStandin: boolean): Project {
     notes: "",
     contactName: "",
     contactInfo: "",
+    shippingAddress: "",
     files: [],
     isStandin,
   };
@@ -126,6 +127,7 @@ export function ProjectTable({
       notes: p.notes,
       contact_name: p.contactName,
       contact_info: p.contactInfo,
+      shipping_address: p.shippingAddress,
       files: p.files,
       is_standin: p.isStandin,
     };

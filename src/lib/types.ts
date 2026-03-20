@@ -28,6 +28,7 @@ export interface Project {
   notes: string;
   contactName: string;
   contactInfo: string;
+  shippingAddress: string;
   files: ProjectFile[];
   isStandin: boolean;
 }

@@ -32,6 +32,7 @@ export default async function DashboardPage() {
       notes: (r.notes as string) || "",
       contactName: (r.contact_name as string) || "",
       contactInfo: (r.contact_info as string) || "",
+      shippingAddress: (r.shipping_address as string) || "",
       files: (r.files as Project["files"]) || [],
       isStandin: !!r.is_standin,
     }));
