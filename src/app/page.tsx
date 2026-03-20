@@ -12,7 +12,7 @@ export default async function DashboardPage() {
   try {
     const supabase = await createClient();
     const { data: projects } = await supabase
-      .from("projects")
+      .from("pb_projects")
       .select("*")
       .order("date", { ascending: false });
 

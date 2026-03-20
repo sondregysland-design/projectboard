@@ -11,7 +11,7 @@ export async function PATCH(
     const body = await request.json();
 
     const { data, error } = await supabase
-      .from("projects")
+      .from("pb_projects")
       .update(body)
       .eq("id", id)
       .select()
@@ -38,7 +38,7 @@ export async function DELETE(
     const { id } = await params;
     const supabase = await createClient();
 
-    const { error } = await supabase.from("projects").delete().eq("id", id);
+    const { error } = await supabase.from("pb_projects").delete().eq("id", id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

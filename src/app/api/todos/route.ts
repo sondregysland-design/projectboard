@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET() {
   const supabase = await createClient();
   const { data, error } = await supabase
-    .from("todos")
+    .from("pb_todos")
     .select("*")
     .order("created_at", { ascending: true });
 
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const supabase = await createClient();
 
-  const { error } = await supabase.from("todos").insert({
+  const { error } = await supabase.from("pb_todos").insert({
     id: body.id,
     task: body.task ?? "",
     category: body.category ?? "",
@@ -58,7 +58,7 @@ export async function PATCH(request: NextRequest) {
   if (fields.status !== undefined) updateData.status = fields.status;
   if (fields.dueDate !== undefined) updateData.due_date = fields.dueDate || null;
 
-  const { error } = await supabase.from("todos").update(updateData).eq("id", id);
+  const { error } = await supabase.from("pb_todos").update(updateData).eq("id", id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -76,7 +76,7 @@ export async function DELETE(request: NextRequest) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.from("todos").delete().eq("id", id);
+  const { error } = await supabase.from("pb_todos").delete().eq("id", id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

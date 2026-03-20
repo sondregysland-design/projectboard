@@ -137,7 +137,7 @@ export function ProjectTable({
     setSaving(true);
     try {
       const { error } = await supabase
-        .from("projects")
+        .from("pb_projects")
         .upsert(toRow(project), { onConflict: "id" });
 
       if (error) {
@@ -173,7 +173,7 @@ export function ProjectTable({
   async function deleteProject(id: string) {
     setSaving(true);
     try {
-      const { error } = await supabase.from("projects").delete().eq("id", id);
+      const { error } = await supabase.from("pb_projects").delete().eq("id", id);
       if (error) throw error;
 
       setProjects((prev) => prev.filter((p) => p.id !== id));
@@ -200,7 +200,7 @@ export function ProjectTable({
     try {
       const ids = Array.from(selected);
       const { error } = await supabase
-        .from("projects")
+        .from("pb_projects")
         .delete()
         .in("id", ids);
       if (error) throw error;

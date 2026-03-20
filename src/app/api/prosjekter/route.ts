@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
-      .from("projects")
+      .from("pb_projects")
       .select("*")
       .order("date", { ascending: false });
 
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     const { data, error } = await supabase
-      .from("projects")
+      .from("pb_projects")
       .insert(body)
       .select()
       .single();
