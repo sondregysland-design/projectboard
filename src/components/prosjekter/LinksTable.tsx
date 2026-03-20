@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { ProjectLink } from "@/lib/types";
 import { isSafeUrl } from "@/lib/utils";
 
@@ -22,6 +22,12 @@ function formatPrice(price: number, priceType: string): string {
 
 export function LinksTable({ links, onChange, projectDate, customerId }: LinksTableProps) {
   const timersRef = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
+  const linksRef = useRef(links);
+  const onChangeRef = useRef(onChange);
+
+  // Keep refs fresh
+  linksRef.current = links;
+  onChangeRef.current = onChange;
 
   // Cleanup timers on unmount
   useEffect(() => {
@@ -30,37 +36,28 @@ export function LinksTable({ links, onChange, projectDate, customerId }: LinksTa
     };
   }, []);
 
-  const lookupPrice = useCallback(
-    async (index: number, equipmentName: string) => {
-      if (!customerId || !equipmentName.trim()) return;
-      try {
-        const encodedName = encodeURIComponent(equipmentName.trim());
-        const res = await fetch(
-          `/api/kontraktpriser?type=lookup&customer_id=${customerId}&equipment_name=${encodedName}`
-        );
-        if (!res.ok) return;
-        const data = await res.json();
-        if (data.price != null && data.priceType) {
-          const priceStr = formatPrice(data.price, data.priceType);
-          // Update modemUrl field with price string
-          onChange(
-            links.map((l, i) =>
-              i === index ? { ...l, modemUrl: priceStr } : l
-            )
-          );
-        } else {
-          onChange(
-            links.map((l, i) =>
-              i === index ? { ...l, modemUrl: "" } : l
-            )
-          );
-        }
-      } catch {
-        // Silently fail — price column will show "—"
-      }
-    },
-    [customerId, links, onChange]
-  );
+  async function lookupPrice(index: number, equipmentName: string) {
+    if (!customerId || !equipmentName.trim()) return;
+    try {
+      const encodedName = encodeURIComponent(equipmentName.trim());
+      const res = await fetch(
+        `/api/kontraktpriser?type=lookup&customer_id=${customerId}&equipment_name=${encodedName}`
+      );
+      if (!res.ok) return;
+      const data = await res.json();
+      const priceStr = (data.price != null && data.priceType)
+        ? formatPrice(data.price, data.priceType)
+        : "";
+      // Use ref to get latest links — avoids overwriting current input values
+      onChangeRef.current(
+        linksRef.current.map((l, i) =>
+          i === index ? { ...l, modemUrl: priceStr } : l
+        )
+      );
+    } catch {
+      // Silently fail
+    }
+  }
 
   function schedulePriceLookup(index: number, equipmentName: string) {
     if (timersRef.current[index]) {
