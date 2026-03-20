@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import type { ProjectLink } from "@/lib/types";
+import { useEffect, useRef, useState } from "react";
+import type { ProjectLink, Equipment } from "@/lib/types";
 import { isSafeUrl } from "@/lib/utils";
 
 interface LinksTableProps {
@@ -24,6 +24,14 @@ export function LinksTable({ links, onChange, projectDate, customerId }: LinksTa
   const timersRef = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
   const linksRef = useRef(links);
   const onChangeRef = useRef(onChange);
+  const [equipment, setEquipment] = useState<Equipment[]>([]);
+
+  useEffect(() => {
+    fetch("/api/kontraktpriser?type=equipment")
+      .then((res) => res.json())
+      .then((data) => setEquipment(data))
+      .catch(() => setEquipment([]));
+  }, []);
 
   // Keep refs fresh
   linksRef.current = links;
@@ -122,7 +130,7 @@ export function LinksTable({ links, onChange, projectDate, customerId }: LinksTa
   return (
     <div className="space-y-2">
       <p className="text-xs font-semibold uppercase tracking-wide text-text-light">
-        Utstyrslenker
+        Utstyr
       </p>
 
       <div className="space-y-2">
@@ -131,14 +139,21 @@ export function LinksTable({ links, onChange, projectDate, customerId }: LinksTa
             key={i}
             className="grid grid-cols-[1fr_110px_110px_1fr_auto_auto_auto] items-center gap-2 rounded-lg border border-gray-100 bg-gray-50/50 p-2"
           >
-            <input
-              type="text"
+            <select
               value={link.utstyr}
-              onChange={(e) => update(i, "utstyr", e.target.value)}
-              onBlur={(e) => handleUtstyrBlur(i, e.target.value)}
-              placeholder="Utstyr"
+              onChange={(e) => {
+                update(i, "utstyr", e.target.value);
+                if (e.target.value) {
+                  lookupPrice(i, e.target.value);
+                }
+              }}
               className="rounded-md border border-gray-200 px-2 py-1.5 text-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            />
+            >
+              <option value="">Velg utstyr...</option>
+              {equipment.map((eq) => (
+                <option key={eq.id} value={eq.name}>{eq.name}</option>
+              ))}
+            </select>
             <input
               type="date"
               value={link.date}
