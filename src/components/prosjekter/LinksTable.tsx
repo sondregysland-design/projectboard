@@ -45,13 +45,13 @@ export function LinksTable({ links, onChange, projectDate, customerId }: LinksTa
       );
       if (!res.ok) return;
       const data = await res.json();
-      const priceStr = (data.price != null && data.priceType)
-        ? formatPrice(data.price, data.priceType)
+      // Store as "price|priceType" for machine parsing, display formatted in UI
+      const rawPrice = (data.price != null && data.priceType)
+        ? `${data.price}|${data.priceType}`
         : "";
-      // Use ref to get latest links — avoids overwriting current input values
       onChangeRef.current(
         linksRef.current.map((l, i) =>
-          i === index ? { ...l, modemUrl: priceStr } : l
+          i === index ? { ...l, modemUrl: rawPrice } : l
         )
       );
     } catch {
@@ -90,6 +90,15 @@ export function LinksTable({ links, onChange, projectDate, customerId }: LinksTa
     if (customerId && equipmentName.trim()) {
       lookupPrice(index, equipmentName);
     }
+  }
+
+  function displayPrice(raw: string): string {
+    if (!raw) return "";
+    const parts = raw.split("|");
+    const price = Number(parts[0]);
+    const priceType = parts[1] || "daily";
+    if (isNaN(price) || price === 0) return raw; // fallback: show as-is
+    return formatPrice(price, priceType);
   }
 
   function addRow() {
@@ -168,7 +177,7 @@ export function LinksTable({ links, onChange, projectDate, customerId }: LinksTa
               }`}
               title="Pris"
             >
-              {link.modemUrl || "\u2014"}
+              {displayPrice(link.modemUrl) || "\u2014"}
             </span>
             <button
               type="button"
