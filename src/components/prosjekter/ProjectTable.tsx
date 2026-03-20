@@ -140,12 +140,17 @@ export function ProjectTable({
         .from("projects")
         .upsert(toRow(project), { onConflict: "id" });
 
-      if (error) throw error;
+      if (error) {
+        showToast("Feil: " + (error.message || error.details || error.hint || JSON.stringify(error)));
+        console.error("Supabase error:", JSON.stringify(error, null, 2));
+        return;
+      }
       showToast("Prosjekt lagret");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      console.error("Save error:", err);
-      showToast("Feil ved lagring: " + msg);
+      const e = err as Record<string, unknown>;
+      const msg = e?.message || e?.details || e?.hint || JSON.stringify(err);
+      console.error("Save error:", JSON.stringify(err, null, 2));
+      showToast("Feil: " + String(msg));
     } finally {
       setSaving(false);
     }
