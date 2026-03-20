@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect, useRef } from "react";
 import type { ProjectLink } from "@/lib/types";
 import { isSafeUrl } from "@/lib/utils";
 
@@ -7,18 +8,91 @@ interface LinksTableProps {
   links: ProjectLink[];
   onChange: (links: ProjectLink[]) => void;
   projectDate: string;
+  customerId?: string;
 }
 
 function emptyLink(date: string): ProjectLink {
   return { utstyr: "", date, returnDate: "", kabalUrl: "", modemUrl: "" };
 }
 
-export function LinksTable({ links, onChange, projectDate }: LinksTableProps) {
+function formatPrice(price: number, priceType: string): string {
+  const formatted = price.toLocaleString("no-NO");
+  return priceType === "daily" ? `${formatted} kr/dag` : `${formatted} kr fast`;
+}
+
+export function LinksTable({ links, onChange, projectDate, customerId }: LinksTableProps) {
+  const timersRef = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      Object.values(timersRef.current).forEach(clearTimeout);
+    };
+  }, []);
+
+  const lookupPrice = useCallback(
+    async (index: number, equipmentName: string) => {
+      if (!customerId || !equipmentName.trim()) return;
+      try {
+        const encodedName = encodeURIComponent(equipmentName.trim());
+        const res = await fetch(
+          `/api/kontraktpriser?type=lookup&customer_id=${customerId}&equipment_name=${encodedName}`
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.price != null && data.priceType) {
+          const priceStr = formatPrice(data.price, data.priceType);
+          // Update modemUrl field with price string
+          onChange(
+            links.map((l, i) =>
+              i === index ? { ...l, modemUrl: priceStr } : l
+            )
+          );
+        } else {
+          onChange(
+            links.map((l, i) =>
+              i === index ? { ...l, modemUrl: "" } : l
+            )
+          );
+        }
+      } catch {
+        // Silently fail — price column will show "—"
+      }
+    },
+    [customerId, links, onChange]
+  );
+
+  function schedulePriceLookup(index: number, equipmentName: string) {
+    if (timersRef.current[index]) {
+      clearTimeout(timersRef.current[index]);
+    }
+    timersRef.current[index] = setTimeout(() => {
+      lookupPrice(index, equipmentName);
+      delete timersRef.current[index];
+    }, 500);
+  }
+
   function update(index: number, field: keyof ProjectLink, value: string) {
     const updated = links.map((l, i) =>
       i === index ? { ...l, [field]: value } : l
     );
     onChange(updated);
+
+    // Schedule price lookup when utstyr changes
+    if (field === "utstyr" && customerId) {
+      schedulePriceLookup(index, value);
+    }
+  }
+
+  function handleUtstyrBlur(index: number, equipmentName: string) {
+    // Cancel any pending debounce and do immediate lookup on blur
+    if (timersRef.current[index]) {
+      clearTimeout(timersRef.current[index]);
+      delete timersRef.current[index];
+    }
+    if (customerId && equipmentName.trim()) {
+      lookupPrice(index, equipmentName);
+    }
   }
 
   function addRow() {
@@ -26,6 +100,10 @@ export function LinksTable({ links, onChange, projectDate }: LinksTableProps) {
   }
 
   function removeRow(index: number) {
+    if (timersRef.current[index]) {
+      clearTimeout(timersRef.current[index]);
+      delete timersRef.current[index];
+    }
     onChange(links.filter((_, i) => i !== index));
   }
 
@@ -45,12 +123,13 @@ export function LinksTable({ links, onChange, projectDate }: LinksTableProps) {
         {links.map((link, i) => (
           <div
             key={i}
-            className="grid grid-cols-[1fr_110px_110px_1fr_auto_1fr_auto_auto] items-center gap-2 rounded-lg border border-gray-100 bg-gray-50/50 p-2"
+            className="grid grid-cols-[1fr_110px_110px_1fr_auto_auto_auto] items-center gap-2 rounded-lg border border-gray-100 bg-gray-50/50 p-2"
           >
             <input
               type="text"
               value={link.utstyr}
               onChange={(e) => update(i, "utstyr", e.target.value)}
+              onBlur={(e) => handleUtstyrBlur(i, e.target.value)}
               placeholder="Utstyr"
               className="rounded-md border border-gray-200 px-2 py-1.5 text-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
@@ -86,24 +165,14 @@ export function LinksTable({ links, onChange, projectDate }: LinksTableProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
             </button>
-            <input
-              type="url"
-              value={link.modemUrl}
-              onChange={(e) => update(i, "modemUrl", e.target.value)}
-              placeholder="Custom URL"
-              className="rounded-md border border-gray-200 px-2 py-1.5 text-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-            <button
-              type="button"
-              onClick={() => openUrl(link.modemUrl)}
-              disabled={!isSafeUrl(link.modemUrl)}
-              className="inline-flex h-7 w-7 items-center justify-center rounded-md text-text-light hover:bg-gray-100 disabled:opacity-30 transition"
-              title="Åpne Custom"
+            <span
+              className={`min-w-[120px] rounded-md border border-gray-100 bg-white px-2 py-1.5 text-xs text-center ${
+                link.modemUrl ? "text-gray-900" : "text-gray-400"
+              }`}
+              title="Pris"
             >
-              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </button>
+              {link.modemUrl || "\u2014"}
+            </span>
             <button
               type="button"
               onClick={() => removeRow(i)}

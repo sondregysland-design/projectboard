@@ -69,3 +69,23 @@ export type ProjectStatus =
   | "finished";
 
 export type ProjectTab = "active" | "completed" | "standin";
+
+export interface Customer {
+  id: string;
+  name: string;
+}
+
+export interface Equipment {
+  id: string;
+  name: string;
+  standardPrice: number;
+  priceType: "daily" | "fixed";
+}
+
+export interface ContractPrice {
+  id: string;
+  customerId: string;
+  equipmentId: string;
+  price: number;
+  priceType: "daily" | "fixed";
+}
