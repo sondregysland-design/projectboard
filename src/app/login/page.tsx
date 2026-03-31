@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { LogoIcon } from "@/components/Logo";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -43,11 +44,12 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-surface p-4 -ml-0 lg:-ml-64">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-light text-lg font-bold text-white">
-            PB
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center">
+            <LogoIcon className="h-12 w-12" />
           </div>
           <h1 className="text-2xl font-extrabold tracking-tight text-text">
-            Project<span className="text-primary">Board</span>
+            <span className="text-primary">ARGON</span>{" "}
+            <span className="font-light text-text-light">Solutions</span>
           </h1>
           <p className="mt-1 text-sm text-text-light">
             Logg inn for å fortsette

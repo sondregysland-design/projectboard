@@ -7,7 +7,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ProjectBoard — Prosjektstyring",
+  title: "ARGON Solutions — Prosjektstyring",
   description: "Prosjektstyring for olje- og gassindustrien",
 };
 

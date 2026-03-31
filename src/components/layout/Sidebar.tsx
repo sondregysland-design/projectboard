@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { LogoFull } from "@/components/Logo";
 
 interface NavItem {
   href: string;
@@ -105,13 +106,8 @@ export function Sidebar() {
         }`}
       >
         {/* Logo */}
-        <div className="flex h-16 items-center gap-3 border-b border-gray-100 px-5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary-light text-sm font-bold text-white">
-            PB
-          </div>
-          <span className="text-lg font-bold text-text">
-            Project<span className="text-primary">Board</span>
-          </span>
+        <div className="flex h-16 items-center border-b border-gray-100 px-5">
+          <LogoFull />
         </div>
 
         {/* Navigation */}
