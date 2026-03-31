@@ -43,17 +43,17 @@ export function SummaryCards({ projects }: SummaryCardsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
       {cards.map((card) => (
         <div
           key={card.label}
-          className={`rounded-xl border ${card.border} bg-white p-5 shadow-sm`}
+          className={`rounded-xl border ${card.border} bg-white p-6 shadow-sm transition hover:shadow-md`}
         >
           <p className="text-xs font-medium uppercase tracking-wide text-text-light">
             {card.label}
           </p>
           <p
-            className={`mt-2 text-3xl font-extrabold ${card.color.split(" ").find((c) => c.startsWith("text-"))}`}
+            className={`mt-2 text-3xl font-bold ${card.color.split(" ").find((c) => c.startsWith("text-"))}`}
           >
             {card.value}
           </p>

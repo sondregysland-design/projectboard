@@ -124,7 +124,7 @@ export default function ProsedyrerPage() {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-10">
+    <main className="mx-auto max-w-5xl px-6 py-12">
       <PageHeader
         title="Prosy"
         highlight="dyrer"

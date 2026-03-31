@@ -14,7 +14,7 @@ export function PageHeader({
   return (
     <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-2xl font-extrabold tracking-tight text-text">
+        <h1 className="text-2xl font-bold tracking-tight text-text">
           {title}
           <span className="text-primary">{highlight}</span>
         </h1>

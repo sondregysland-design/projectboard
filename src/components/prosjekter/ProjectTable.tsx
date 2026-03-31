@@ -225,7 +225,7 @@ export function ProjectTable({
     <div className="space-y-4">
       {/* Tabs + Search */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex rounded-lg border border-gray-200 bg-white p-0.5">
+        <div className="flex rounded-lg border border-gray-100 bg-white p-0.5">
           {tabs.map((t) => (
             <button
               key={t.id}
@@ -274,7 +274,7 @@ export function ProjectTable({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Sok..."
-              className="w-64 rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              className="w-64 rounded-lg border border-gray-100 bg-white py-2 pl-9 pr-4 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
         </div>
