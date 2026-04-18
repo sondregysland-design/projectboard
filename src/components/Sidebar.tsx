@@ -13,6 +13,8 @@ import {
   X,
   LogOut,
   Anchor,
+  Archive,
+  SpellCheck,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -28,6 +30,8 @@ const leaderNav: NavItem[] = [
   { href: "/prosedyrer", label: "Prosedyrer", icon: FileText },
   { href: "/gjoremal", label: "Gjøremål", icon: CheckSquare },
   { href: "/lager", label: "Lager", icon: Package },
+  { href: "/arkiv", label: "Arkiv", icon: Archive },
+  { href: "/rettskriving", label: "Rettskriving", icon: SpellCheck },
 ];
 
 const workshopNav: NavItem[] = [
