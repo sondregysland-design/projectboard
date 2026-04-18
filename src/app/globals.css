@@ -10,6 +10,38 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Core palette — warm earth tones */
+  --color-ivory: #faf8f4;
+  --color-parchment: #f5f0e8;
+  --color-warm-sand: #e8e4d9;
+  --color-border-cream: #ddd8cb;
+  --color-border-warm: #cfc9b8;
+
+  /* Text */
+  --color-near-black: #1a1916;
+  --color-charcoal: #3d3b35;
+  --color-olive: #5c5a4e;
+  --color-stone: #8a8778;
+
+  /* Accent */
+  --color-terracotta: #c96442;
+  --color-coral: #e07356;
+  --color-dark-surface: #2a2926;
+
+  /* Semantic */
+  --color-error: #c43e3e;
+  --color-success: #3a8a5c;
+  --color-warning: #c49a3e;
+  --color-focus: #5b8fb8;
+
+  /* Status */
+  --color-status-planning: #5b8fb8;
+  --color-status-workshop: #c49a3e;
+  --color-status-offshore: #3a8a5c;
+  --color-status-invoicing: #8b6bb5;
+  --color-status-completed: #5a9a6e;
+  --color-status-standby: #8a8778;
 }
 
 @media (prefers-color-scheme: dark) {
