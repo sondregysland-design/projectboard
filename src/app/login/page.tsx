@@ -12,8 +12,9 @@ export default function LoginPage() {
     setLoading(role);
     try {
       const isIframe = window.self !== window.top;
+      const embedMode = new URLSearchParams(window.location.search).get("embed") === "1";
 
-      if (isIframe) {
+      if (isIframe && !embedMode) {
         // Third-party cookies are blocked in iframes — open in new tab
         window.open(
           `/api/auth/login-redirect?role=${role}`,
